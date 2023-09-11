@@ -16,18 +16,20 @@ ARG VERSION=2.4.0-isc20230630120747
 ARG TOKEN
 ARG PREMIUM
 
-RUN apt-get update && apt-get dist-upgrade -y && apt-get install -y curl bash && \
+#TODO curl is using -k version to ignore not updated ca-certificates, certificates should be updated rather than mitigate this
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recommends -y curl bash && \
     # Setup Cloudsmith repo
-    curl -1sLf "https://dl.cloudsmith.io/public/isc/kea-2-4/setup.deb.sh" | bash && \
+    curl -1sLkf "https://dl.cloudsmith.io/public/isc/kea-$(echo "${VERSION}" | cut -c1;)-$(echo "${VERSION}" | cut -c3;)/setup.deb.sh" | bash && \
     apt-get update && \
     # Install main Kea packaegs and supervisor
-    apt-get install -y isc-kea-dhcp4=${VERSION} isc-kea-ctrl-agent=${VERSION} isc-kea-hooks=${VERSION} supervisor && \
+    apt-get install --no-install-recommends --no-install-recommends -y isc-kea-dhcp4=${VERSION} isc-kea-ctrl-agent=${VERSION} isc-kea-hooks=${VERSION} supervisor && \
     # If token is provided add premium Cloudsmith repository
     if [ -n "$TOKEN" ]; then \
-    curl -1sLf "https://dl.cloudsmith.io/${TOKEN}/isc/kea-2-4-prv/setup.deb.sh" | bash && \
+    curl -1sLkf "https://dl.cloudsmith.io/${TOKEN}/isc/kea-$(echo "${VERSION}" | cut -c1;)-$(echo "${VERSION}" | cut -c3;)-prv/setup.deb.sh" | bash && \
     apt-get update && \
     # Install premium Kea hooks
-    apt-get install -y \
+    apt-get install --no-install-recommends -y \
         isc-kea-premium-ddns-tuning=${VERSION} \
         isc-kea-premium-flex-id=${VERSION} \
         isc-kea-premium-forensic-log=${VERSION} \
@@ -35,7 +37,7 @@ RUN apt-get update && apt-get dist-upgrade -y && apt-get install -y curl bash &&
     fi && \
     # Install subscribers Kea hooks (provided TOKEN should have access to those pkgs)
     if [ -n "$TOKEN" ] && [ "$PREMIUM" = "SUBSCRIBERS" ]; then \
-    apt-get install -y \
+    apt-get install --no-install-recommends -y \
         isc-kea-premium-cb-cmds=${VERSION} \
         isc-kea-premium-class-cmds=${VERSION} \
         isc-kea-premium-host-cache=${VERSION} \            
@@ -45,7 +47,7 @@ RUN apt-get update && apt-get dist-upgrade -y && apt-get install -y curl bash &&
     fi && \
     # Install subscribers and enterprise Kea hooks (provided TOKEN should have access to those pkgs)
     if [ -n "$TOKEN" ] && [ "$PREMIUM" = "ENTERPRISE" ]; then \
-    apt-get install -y \
+    apt-get install --no-install-recommends -y \
         isc-kea-premium-cb-cmds=${VERSION} \
         isc-kea-premium-class-cmds=${VERSION} \
         isc-kea-premium-host-cache=${VERSION} \            

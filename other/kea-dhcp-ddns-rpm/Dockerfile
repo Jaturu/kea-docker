@@ -17,21 +17,23 @@ ARG K_VERSION=2.4.0-isc20230630120747
 ARG TOKEN
 ARG PREMIUM
 
+#TODO curl is using -k version to ignore not updated ca-certificates, certificates should be updated rather than mitigate this
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN dnf update -y && \
     # Setup Cloudsmith repo
-    curl -1sLf "https://dl.cloudsmith.io/public/isc/kea-2-4/setup.rpm.sh" | bash && \
+    curl -1sLkf "https://dl.cloudsmith.io/public/isc/kea-$(echo "${K_VERSION}" | cut -c1;)-$(echo "${K_VERSION}" | cut -c3;)/setup.rpm.sh" | bash && \
     dnf update && \
     # Install main Kea packaegs and supervisor
     dnf install -y isc-kea-dhcp-ddns-${K_VERSION}.fc${F_VERSION} \
         isc-kea-ctrl-agent-${K_VERSION}.fc${F_VERSION} \
         supervisor && \
     # If token is provided add premium Cloudsmith repository
-    if [ -n "$TOKEN" ] &&  ([ "$PREMIUM" = "SUBSCRIBERS" ] || [ "$PREMIUM" = "ENTERPRISE" ]); then \
-    curl -1sLf "https://dl.cloudsmith.io/${TOKEN}/isc/kea-2-4-prv/setup.rpm.sh" | bash && \
+    if [ -n "$TOKEN" ] && { [ "$PREMIUM" = "SUBSCRIBERS" ] || [ "$PREMIUM" = "ENTERPRISE" ]; } then \
+    curl -1sLkf "https://dl.cloudsmith.io/${TOKEN}/isc/kea-$(echo "${K_VERSION}" | cut -c1;)-$(echo "${K_VERSION}" | cut -c3;)-prv/setup.rpm.sh" | bash && \
     yum update && \
     # Install premium Kea hooks
     dnf install -y \
-        isc-kea-premium-gss-tsig=${VERSION}; \
+        isc-kea-premium-gss-tsig-${K_VERSION}.fc${F_VERSION}; \
     fi && \
     # Revert Cloudsmith repositories
     rm -rf /etc/yum.repos.d/isc-kea-* && \
