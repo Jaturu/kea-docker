@@ -60,7 +60,10 @@ RUN cp /etc/apk/repositories /etc/apk/repositories_backup && \
     # Revert Cloudsmith repositories
     mv /etc/apk/repositories_backup /etc/apk/repositories && \
     # Create directory for supervisor logs
-    mkdir -p /var/log/supervisor
+    mkdir -p /var/log/supervisor && \
+    # remove curl
+    apk del curl
+
 
 VOLUME ["/etc/kea", "/var/lib/kea/"]
 
