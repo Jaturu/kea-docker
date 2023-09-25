@@ -1,3 +1,8 @@
+* 8 [build] wlodek
+
+    Run kea under kea user not root.
+    (Gitlab #20)
+
 * 7 [build] marcing
 
     Added kea-compose server
