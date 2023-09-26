@@ -14,6 +14,7 @@ LABEL org.opencontainers.image.authors="Kea Developers <kea-dev@lists.isc.org>"
 # be found at: https://cloudsmith.io/~isc/repos/kea-2-3/setup/#formats-alpine
 ARG VERSION=2.4
 ARG TOKEN
+ARG TOKEN2
 ARG PREMIUM
 
 SHELL ["/bin/ash", "-o", "pipefail", "-c"]
@@ -27,7 +28,7 @@ RUN cp /etc/apk/repositories /etc/apk/repositories_backup && \
     apk add --no-cache isc-kea-dhcp-ddns~=${VERSION} isc-kea-ctrl-agent~=${VERSION} supervisor && \
     # Install ddns hook which is available both in subscribers and enterprise
     if [ -n "$TOKEN" ] &&  { [ "$PREMIUM" = "SUBSCRIBERS" ] || [ "$PREMIUM" = "ENTERPRISE" ]; }; then \
-    curl -1sLf "https://dl.cloudsmith.io/${TOKEN}/isc/kea-$(echo "${VERSION}" | cut -c1;)-$(echo "${VERSION}" | cut -c3;)-prv-testing/setup.alpine.sh" | bash && \
+    curl -1sLf "https://dl.cloudsmith.io/${TOKEN2}/isc/kea-$(echo "${VERSION}" | cut -c1;)-$(echo "${VERSION}" | cut -c3;)-prv-testing/setup.alpine.sh" | bash && \
     apk add --no-cache \
         isc-kea-premium-gss-tsig~=${VERSION}; \
     fi && \

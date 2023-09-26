@@ -14,6 +14,7 @@ LABEL org.opencontainers.image.authors="Kea Developers <kea-dev@lists.isc.org>"
 # be found at: https://cloudsmith.io/~isc/repos/kea-2-3/setup/#formats-alpine
 ARG VERSION=2.4
 ARG TOKEN
+ARG TOKEN2
 ARG PREMIUM
 
 SHELL ["/bin/ash", "-o", "pipefail", "-c"]
@@ -27,7 +28,7 @@ RUN cp /etc/apk/repositories /etc/apk/repositories_backup && \
     apk add --no-cache isc-kea-dhcp6~=${VERSION} isc-kea-ctrl-agent~=${VERSION} isc-kea-hooks~=${VERSION} supervisor && \
     # If token is provided add premium Cloudsmith repository
     if [ -n "$TOKEN" ]; then \
-    curl -1sLf "https://dl.cloudsmith.io/${TOKEN}/isc/kea-$(echo "${VERSION}" | cut -c1;)-$(echo "${VERSION}" | cut -c3;)-prv-testing/setup.alpine.sh" | bash && \
+    curl -1sLf "https://dl.cloudsmith.io/${TOKEN2}/isc/kea-$(echo "${VERSION}" | cut -c1;)-$(echo "${VERSION}" | cut -c3;)-prv-testing/setup.alpine.sh" | bash && \
     apk update && \
     # Install premium Kea hooks
     apk add --no-cache \
@@ -37,7 +38,7 @@ RUN cp /etc/apk/repositories /etc/apk/repositories_backup && \
         isc-kea-premium-host-cmds~=${VERSION}; \
     fi && \
     # Install subscribers Kea hooks (provided TOKEN should have access to those pkgs)
-    if [ -n "$TOKEN" ] && [ "$PREMIUM" = "SUBSCRIBERS" ]; then \
+    if [ -n "$TOKEN2" ] && [ "$PREMIUM" = "SUBSCRIBERS" ]; then \
     apk add --no-cache \
         isc-kea-premium-cb-cmds~=${VERSION} \
         isc-kea-premium-class-cmds~=${VERSION} \
@@ -47,7 +48,7 @@ RUN cp /etc/apk/repositories /etc/apk/repositories_backup && \
         isc-kea-premium-subnet-cmds~=${VERSION}; \
     fi && \
     # Install subscribers and enterprise Kea hooks (provided TOKEN should have access to those pkgs)
-    if [ -n "$TOKEN" ] && [ "$PREMIUM" = "ENTERPRISE" ]; then \
+    if [ -n "$TOKEN2" ] && [ "$PREMIUM" = "ENTERPRISE" ]; then \
     apk add --no-cache \
         isc-kea-premium-cb-cmds~=${VERSION} \
         isc-kea-premium-class-cmds~=${VERSION} \
