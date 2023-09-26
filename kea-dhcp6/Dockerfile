@@ -21,13 +21,13 @@ RUN cp /etc/apk/repositories /etc/apk/repositories_backup && \
     # Install curl and bash
     apk update && apk add --no-cache curl bash && \
     # Setup Cloudsmith repo
-    curl -1sLf "https://dl.cloudsmith.io/public/isc/kea-$(echo "${VERSION}" | cut -c1;)-$(echo "${VERSION}" | cut -c3;)/setup.alpine.sh" | bash && \
+    curl -1sLf "https://dl.cloudsmith.io/${TOKEN}/isc/kea-$(echo "${VERSION}" | cut -c1;)-$(echo "${VERSION}" | cut -c3;)-testing/setup.alpine.sh" | bash && \
     apk update && \
     # Install main Kea packaegs and supervisor
     apk add --no-cache isc-kea-dhcp6~=${VERSION} isc-kea-ctrl-agent~=${VERSION} isc-kea-hooks~=${VERSION} supervisor && \
     # If token is provided add premium Cloudsmith repository
     if [ -n "$TOKEN" ]; then \
-    curl -1sLf "https://dl.cloudsmith.io/${TOKEN}/isc/kea-$(echo "${VERSION}" | cut -c1;)-$(echo "${VERSION}" | cut -c3;)-prv/setup.alpine.sh" | bash && \
+    curl -1sLf "https://dl.cloudsmith.io/${TOKEN}/isc/kea-$(echo "${VERSION}" | cut -c1;)-$(echo "${VERSION}" | cut -c3;)-prv-testing/setup.alpine.sh" | bash && \
     apk update && \
     # Install premium Kea hooks
     apk add --no-cache \
