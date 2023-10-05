@@ -12,7 +12,7 @@ LABEL org.opencontainers.image.authors="Kea Developers <kea-dev@lists.isc.org>"
 # Add Kea packages from cloudsmith. Make sure the version matches that of the Alpine version.
 # Also, install all the open source hooks. When updating, new instructions can
 # be found at: https://cloudsmith.io/~isc/repos/kea-2-3/setup/#formats-alpine
-ARG VERSION=2.4.0-isc20230630120747
+ARG VERSION=2.4.0-isc20230921141113
 ARG TOKEN
 ARG PREMIUM
 

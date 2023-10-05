@@ -13,7 +13,7 @@ LABEL org.opencontainers.image.authors="Kea Developers <kea-dev@lists.isc.org>"
 # Also, install all the open source hooks. When updating, new instructions can
 # be found at: https://cloudsmith.io/~isc/repos/kea-2-3/setup/#formats-alpine
 ARG F_VERSION=38
-ARG K_VERSION=2.4.0-isc20230630120747
+ARG K_VERSION=2.4.0-isc20230921141113
 ARG TOKEN
 ARG PREMIUM
 
@@ -21,7 +21,7 @@ ARG PREMIUM
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN dnf update -y && \
     # Setup Cloudsmith repo
-    curl -1sLkf "https://dl.cloudsmith.io/public/isc/kea-$(echo "${F_VERSION}" | cut -c1;)-$(echo "${F_VERSION}" | cut -c3;)setup.rpm.sh" | bash && \
+    curl -1sLkf "https://dl.cloudsmith.io/public/isc/kea-$(echo "${K_VERSION}" | cut -c1;)-$(echo "${K_VERSION}" | cut -c3;)/setup.rpm.sh" | bash && \
     dnf update && \
     # Install main Kea packaegs and supervisor
     dnf install -y isc-kea-dhcp4-${K_VERSION}.fc${F_VERSION} \
@@ -30,8 +30,8 @@ RUN dnf update -y && \
         supervisor && \
     # If token is provided add premium Cloudsmith repository
     if [ -n "$TOKEN" ]; then \
-    curl -1sLkf "https://dl.cloudsmith.io/${TOKEN}/isc/kea-$(echo "${F_VERSION}" | cut -c1;)-$(echo "${F_VERSION}" | cut -c3;)-prv/setup.rpm.sh" | bash && \
-    yum update && \
+    curl -1sLkf "https://dl.cloudsmith.io/${TOKEN}/isc/kea-$(echo "${K_VERSION}" | cut -c1;)-$(echo "${K_VERSION}" | cut -c3;)-prv/setup.rpm.sh" | bash && \
+    dnf update -y && \
     # Install premium Kea hooks
     dnf install -y \
         isc-kea-premium-ddns-tuning-${K_VERSION}.fc${F_VERSION} \
@@ -47,6 +47,7 @@ RUN dnf update -y && \
         isc-kea-premium-host-cache-${K_VERSION}.fc${F_VERSION} \            
         isc-kea-premium-lease-query-${K_VERSION}.fc${F_VERSION} \
         isc-kea-premium-limits-${K_VERSION}.fc${F_VERSION} \
+        # isc-kea-premium-ping-check-${K_VERSION}.fc${F_VERSION}  \
         isc-kea-premium-subnet-cmds-${K_VERSION}.fc${F_VERSION}; \
     fi && \
     # Install subscribers and enterprise Kea hooks (provided TOKEN should have access to those pkgs)
@@ -57,6 +58,7 @@ RUN dnf update -y && \
         isc-kea-premium-host-cache-${K_VERSION}.fc${F_VERSION} \            
         isc-kea-premium-lease-query-${K_VERSION}.fc${F_VERSION} \
         isc-kea-premium-limits-${K_VERSION}.fc${F_VERSION} \
+        # isc-kea-premium-ping-check-${K_VERSION}.fc${F_VERSION} \
         isc-kea-premium-subnet-cmds-${K_VERSION}.fc${F_VERSION} \
         isc-kea-premium-rbac-${K_VERSION}.fc${F_VERSION}; \
     fi && \

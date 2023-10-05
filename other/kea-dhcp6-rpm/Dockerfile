@@ -13,7 +13,7 @@ LABEL org.opencontainers.image.authors="Kea Developers <kea-dev@lists.isc.org>"
 # Also, install all the open source hooks. When updating, new instructions can
 # be found at: https://cloudsmith.io/~isc/repos/kea-2-3/setup/#formats-alpine
 ARG F_VERSION=38
-ARG K_VERSION=2.4.0-isc20230630120747
+ARG K_VERSION=2.4.0-isc20230921141113
 ARG TOKEN
 ARG PREMIUM
 
@@ -31,7 +31,7 @@ RUN curl -1skLf "https://dl.cloudsmith.io/public/isc/kea-$(echo "${K_VERSION}" |
     # If token is provided add premium Cloudsmith repository
     if [ -n "$TOKEN" ]; then \
     curl -1skLf "https://dl.cloudsmith.io/${TOKEN}/isc/kea-$(echo "${K_VERSION}" | cut -c1;)-$(echo "${K_VERSION}" | cut -c3;)-prv/setup.rpm.sh" | bash && \
-    yum update && \
+    dnf update -y && \
     # Install premium Kea hooks
     dnf install -y \
         isc-kea-premium-ddns-tuning-${K_VERSION}.fc${F_VERSION} \
