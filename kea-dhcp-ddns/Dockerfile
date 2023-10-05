@@ -38,6 +38,8 @@ RUN cp /etc/apk/repositories /etc/apk/repositories_backup && \
     # remove curl
     apk del curl
 
+RUN date > timestamp.txt
+
 # Copy supervisor configs
 COPY supervisord.conf /etc/supervisor/supervisord.conf
 COPY supervisor-kea-dhcp-ddns.conf /etc/supervisor/conf.d/kea-dhcp-ddns.conf

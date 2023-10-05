@@ -63,6 +63,8 @@ RUN cp /etc/apk/repositories /etc/apk/repositories_backup && \
     mkdir -p /var/log/supervisor && \
     # remove curl
     apk del curl
+    
+RUN date > timestamp.txt
 
 VOLUME ["/etc/kea", "/var/lib/kea/"]
 
