@@ -38,7 +38,7 @@ RUN cp /etc/apk/repositories /etc/apk/repositories_backup && \
     # remove curl
     apk del curl
 
-RUN date > timestamp.txt
+RUN echo "$(date)" > timestamp.txt
 
 # Copy supervisor configs
 COPY supervisord.conf /etc/supervisor/supervisord.conf
