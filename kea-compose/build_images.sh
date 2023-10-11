@@ -21,7 +21,7 @@ docker build --tag kea-dhcp4:${VERSION} --build-arg VERSION=${VERSION} .
 cd ../kea-dhcp6
 docker build --tag kea-dhcp6:${VERSION} --build-arg VERSION=${VERSION} .
 cd "${DIRECTORY}"
-mkdir var initdb
+mkdir initdb
 wget https://gitlab.isc.org/isc-projects/kea/raw/Kea-$(echo "${VERSION}" | cut -c1;).$(echo "${VERSION}" | cut -c3;).$(echo "${VERSION}" | cut -c5;)/src/share/database/scripts/pgsql/dhcpdb_create.pgsql -O ./initdb/dhcpdb_create.sql
 
 tee "config/kea/subnets4.json" > /dev/null <<EOF

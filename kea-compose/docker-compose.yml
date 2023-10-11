@@ -1,5 +1,6 @@
 volumes:
   database:
+  var:
 
 services:
   kea4:
@@ -8,19 +9,14 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    ports:
-      - ${IP4}:8080:8080
-      - ${IP4}:8081:8081/udp
-      - ${IP4}:9000:9000
-      - ${IP4}:67:67/udp
-      - ${IP4}:67:67/tcp
+    networks:
+      - kea-macvlan
+      - kea-internal
     volumes:
       - type: bind
         source: ./config/kea
         target: /etc/kea
-      - type: bind
-        source: ./var
-        target: /var/lib/kea
+      - var:/var/lib/kea
 
   kea6:
     image: kea-dhcp6:${VERSION}
@@ -28,17 +24,16 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    ports:
-      - "[${IP6}]:8081:8081/udp"
-      - "[${IP6}]:547:547/udp"
-      - "[${IP6}]:547:547/tcp"
+    networks:
+      - kea-macvlan
+      # Comment above, and uncomment below for separate v4 and v6 interface
+      # kea6-macvlan
+      - kea-internal
     volumes:
       - type: bind
         source: ./config/kea
         target: /etc/kea
-      - type: bind
-        source: ./var
-        target: /var/lib/kea
+      - var:/var/lib/kea
 
   db:
     image: postgres
@@ -48,9 +43,25 @@ services:
     environment:
       POSTGRES_PASSWORD: keatest
       POSTGRES_USER: keadb
+    networks:
+      - kea-internal
     volumes:
       - database:/var/lib/posgresql
       - type: bind
         source: ./initdb
         target: /docker-entrypoint-initdb.d
 
+networks:
+  kea-macvlan:
+    name: kea-macvlan
+    driver: macvlan
+    driver_opts:
+      parent: ${ETH}
+# Uncomment section below for separate v4 and v6 interface
+#  kea6-macvlan:
+#    name: kea6-macvlan
+#    driver: macvlan
+#    driver_opts:
+#      parent: ${ETH6}
+  kea-internal:
+    name: kea-internal
