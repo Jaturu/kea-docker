@@ -69,11 +69,11 @@ It is not recommended to bind the container to the "host" network - this will co
 To bind container to specific physical (or vlan) interface you need to create "MacVlan" docker network.
 
 ```shell
-dockenetwork create --driver macvlan --opt parent=[host-interface] [new-network-name]
+docker network create --driver macvlan --opt parent=[host-interface] [new-network-name]
 ```
 Eg.
 ```shell
-dockenetwork create --driver macvlan --opt parent=enp0s9 macvlan0
+docker network create --driver macvlan --opt parent=enp0s9 macvlan0
 ```
 
 Then add parameter to `docker run` command:
@@ -127,7 +127,7 @@ Here are some example commands to run Kea images. Please modify them for your sy
 
 Creating MacVlan network to use with the containers.
 ```
-dockenetwork create --driver macvlan --opt parent=enp0s2 macvlan0
+docker network create --driver macvlan --opt parent=enp0s2 macvlan0
 ```
 
 Kea DHCP v4 with all volumes:
@@ -214,7 +214,7 @@ To bind container to specific physical (or vlan) interface you need to create "M
 
 To create this network use:
 ```shell
-dockenetwork create --driver macvlan --opt parent=[host-interface] [macvlan-network-name]
+docker network create --driver macvlan --opt parent=[host-interface] [macvlan-network-name]
 ```
 
 Each container has its default configuration included. This is why it's possible to run it without any additional changes:
