@@ -10,8 +10,8 @@ services:
       db:
         condition: service_healthy
     networks:
-      - kea-macvlan
-      - kea-internal
+      - kea-0-macvlan
+      - kea-1-internal
     volumes:
       - type: bind
         source: ./config/kea
@@ -25,10 +25,10 @@ services:
       db:
         condition: service_healthy
     networks:
-      - kea-macvlan
-      # Comment above, and uncomment below for separate v4 and v6 interface
-      # kea6-macvlan
-      - kea-internal
+      - kea-0-macvlan
+      # Comment "- kea-0-macvlan" above, and uncomment "- kea-0-v6macvlan" below for separate v4 and v6 interfacee
+      # - kea-0-v6macvlan
+      - kea-1-internal
     volumes:
       - type: bind
         source: ./config/kea
@@ -44,7 +44,7 @@ services:
       POSTGRES_PASSWORD: keatest
       POSTGRES_USER: keadb
     networks:
-      - kea-internal
+      - kea-1-internal
     volumes:
       - database:/var/lib/posgresql
       - type: bind
@@ -52,16 +52,16 @@ services:
         target: /docker-entrypoint-initdb.d
 
 networks:
-  kea-macvlan:
-    name: kea-macvlan
+  kea-0-macvlan:
+    name: kea-0-macvlan
     driver: macvlan
     driver_opts:
       parent: ${ETH}
 # Uncomment section below for separate v4 and v6 interface
-#  kea6-macvlan:
-#    name: kea6-macvlan
+#  kea-0-v6macvlan:
+#    name: kea-0-v6macvlan
 #    driver: macvlan
 #    driver_opts:
 #      parent: ${ETH6}
-  kea-internal:
-    name: kea-internal
+  kea-1-internal:
+    name: kea-1-internal
