@@ -95,13 +95,13 @@ When using multiple docker networks, you can bind specific ports to host for usi
 List of available ports.
 
 Kea DHCP v4:
-- 67/tpc - Bulk Lease Query
+- 67/tpc - Bulk Leasequery
 - 67/udp - DHCP port (Only Relay traffic will be forwarded)
 - 8000/tcp - Control Agent
 - 8001/tcp - High Availability communication
 
 Kea DHCP v6:
-- 547/tpc - Bulk Lease Query
+- 547/tpc - Bulk Leasequery
 - 547/udp - DHCP port (Only Relay traffic will be forwarded)
 - 8000/tcp - Control Agent
 - 8001/tcp - High Availability communication
