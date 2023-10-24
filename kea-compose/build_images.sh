@@ -12,19 +12,21 @@ while getopts 'v:' OPTION; do
       ;;
   esac
 done
-shift "$(($OPTIND -1))"
+shift "$((OPTIND -1))"
+
+script_path=$(cd "$(dirname "${0}")" && pwd)
+cd "${script_path}" || exit
 
 echo "Kea version selected $VERSION"
-DIRECTORY="$PWD"
-cd ../kea-dhcp4
-docker build --tag kea-dhcp4:${VERSION} --build-arg VERSION=${VERSION} .
-cd ../kea-dhcp6
-docker build --tag kea-dhcp6:${VERSION} --build-arg VERSION=${VERSION} .
-cd "${DIRECTORY}"
+cd "${script_path}"/../kea-dhcp4 || exit
+docker build --tag kea-dhcp4:"${VERSION}" --build-arg VERSION="${VERSION}" .
+cd "${script_path}"/../kea-dhcp6 || exit
+docker build --tag kea-dhcp6:"${VERSION}" --build-arg VERSION="${VERSION}" .
+cd "${script_path}" || exit
 mkdir -p initdb
-wget https://gitlab.isc.org/isc-projects/kea/raw/Kea-$(echo "${VERSION}" | cut -c1;).$(echo "${VERSION}" | cut -c3;).$(echo "${VERSION}" | cut -c5;)/src/share/database/scripts/pgsql/dhcpdb_create.pgsql -O ./initdb/dhcpdb_create.sql
+wget "https://gitlab.isc.org/isc-projects/kea/raw/Kea-$(echo "${VERSION}" | cut -c1;).$(echo "${VERSION}" | cut -c3;).$(echo "${VERSION}" | cut -c5;)/src/share/database/scripts/pgsql/dhcpdb_create.pgsql" -O ./initdb/dhcpdb_create.sql
 
-tee "config/kea/subnets4.json" > /dev/null <<EOF
+cat > "config/kea/subnets4.json" <<EOF
 "subnet4": [
   {
   "subnet": "$SUBNET4",
@@ -38,7 +40,7 @@ tee "config/kea/subnets4.json" > /dev/null <<EOF
 ]
 EOF
 
-tee "config/kea/subnets6.json" > /dev/null <<EOF
+cat > "config/kea/subnets6.json" <<EOF
 "subnet6": [
   {
   "subnet": "$SUBNET6",

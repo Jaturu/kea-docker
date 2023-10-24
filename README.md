@@ -47,6 +47,9 @@ docker.cloudsmith.io/isc/docker/kea-dhcp4:2.5.2
 Kea images should be provided with configuration files and have proper docker network to work correctly.
 (If you don't provide a configuration file, the server will run an example config file.)
 
+For Kea v6 you need to have IPv6 enabled in docker engine. \
+(more informations: https://docs.docker.com/config/daemon/ipv6/)
+
 ### Volumes
 
 You can mount these volumes to kea containers:
@@ -69,11 +72,11 @@ It is not recommended to bind the container to the "host" network - this will co
 To bind container to specific physical (or vlan) interface you need to create "IPVlan" docker network.
 
 ```shell
-docker network create --driver ipvlan --opt parent=[host-interface] [new-network-name]
+docker network create --driver ipvlan --subnet=[subnet] --opt parent=[host-interface] [new-network-name]
 ```
 Eg.
 ```shell
-docker network create --driver ipvlan --opt parent=enp0s9 ipvlan0
+docker network create --driver ipvlan --subnet=192.168.50.0/24 --opt parent=enp0s9 ipvlan0
 ```
 
 Then add parameter to `docker run` command:
@@ -81,24 +84,22 @@ Then add parameter to `docker run` command:
 --net=[new-network-name]
 ```
 
-Kea DDNS does not need to be run using IPVlan network. It can be bound using default docker bridge.
+Kea DDNS does not need to be run using IPVlan network. It can be bound using default docker bridge with port forwarding.
 
 ### Ports
 
 When using multiple docker networks, you can bind specific ports to host for using bridged network and port binding.
 
-For security only used ports should be bound.
-
 List of available ports.
 
 Kea DHCP v4:
-- 67/tpc - Bulk Lease Querry
+- 67/tpc - Bulk Lease Query
 - 67/udp - DHCP port (Only Relay traffic will be forwarded)
 - 8000/tcp - Control Agent
 - 8001/tcp - High Availability communication
 
 Kea DHCP v6:
-- 547/tpc - Bulk Lease Querry
+- 547/tpc - Bulk Lease Query
 - 547/udp - DHCP port (Only Relay traffic will be forwarded)
 - 8000/tcp - Control Agent
 - 8001/tcp - High Availability communication
@@ -128,7 +129,7 @@ We recommend looking at working setup in kea-compose.
 
 Creating IPVlan network to use with the containers.
 ```
-docker network create --driver ipvlan --opt parent=enp0s2 ipvlan0
+docker network create --driver ipvlan --subnet=192.168.50.0/24 --opt parent=enp0s2 ipvlan0
 ```
 
 Kea DHCP v4 with all volumes:
@@ -211,31 +212,31 @@ corresponds to your actual network.
 Containers are using a supervisor to run two processes: control agent for exposing Kea
 API channel and one kea process (kea-dhcp4, kea-dhcp6 and kea-dhcp-ddns)
 
-To bind container to specific physical (or vlan) interface you need to create "MacVlan" docker network.
+To bind container to specific physical (or vlan) interface you need to create "IPVlan" docker network.
 
 To create this network use:
 ```shell
-docker network create --driver macvlan --opt parent=[host-interface] [macvlan-network-name]
+docker network create --driver ipvlan --subnet=[subnet] --opt parent=[host-interface] [ipvlan-network-name]
 ```
 
 Each container has its default configuration included. This is why it's possible to run it without any additional changes:
 
 ```shell
-sudo docker run --net=<macvlan_network_name> kea4
+sudo docker run --net=<ipvlan_network_name> kea4
 ```
 
 There are two ways to change Kea configuration. Via command control channel by sending `config-set` command or by overwriting files in docker:
 
 ```shell
 sudo docker run --volume=./:/etc/kea  \
-                --net=<macvlan_network_name> <image-id or tag>
+                --net=<ipvlan_network_name> <image-id or tag>
 ```
 
 or
 
 ```shell
 sudo docker run --volume=./kea-dhcp4.conf:/etc/kea/kea-dhcp4.conf  \
-                --net=<macvlan_network_name> <image-id or tag>
+                --net=<ipvlan_network_name> <image-id or tag>
 ```
 
 By default, containers are exposing `/var/lib/kea` so users can have easy access to leases files. Option `--volume=./:/var/lib/kea` should be added on docker startup:
@@ -243,14 +244,23 @@ By default, containers are exposing `/var/lib/kea` so users can have easy access
 ```shell
 sudo docker run --volume=./config/kea:/etc/kea  \
                 --volume=./:/var/lib/kea  \
-                --net=<macvlan_network_name> <image-id or tag>
+                --net=<ipvlan_network_name> <image-id or tag>
 ```
 
 # Kea-Compose server
 
-Kea-compose script allows for easy deployment of kea-dhcp server. (Including kea-dhcp4, kea-dhcp6, and postgresql lease database)
+Kea-compose script allows for easy deployment of basic kea-dhcp server. (Including kea-dhcp4, kea-dhcp6, and postgresql lease database)
 
-Please note that you need to have IPv4 and IPv6 addresses used by Kea assigned to your host !
+You need to have IPv6 enabled in docker engine:
+Edit `/etc/docker/daemon.json` and add:
+```json
+{
+  "experimental": true,
+  "ip6tables": true
+}
+```
+Restart docker service.
+(more informations: https://docs.docker.com/config/daemon/ipv6/)
 
 Preparation:
 - Edit `.env` file to set your parameters.
