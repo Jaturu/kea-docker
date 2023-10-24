@@ -20,6 +20,7 @@ Table of contents:
     1. [Running the image](#running-the-image)
 1. [Kea-Compose server](#kea-compose-server)
 1. [Other](#other)
+    1. [Docker issues](#docker-issues)
     1. [Support](#support)
     1. [Documentation](#documentation)
     1. [Issues](#issues)
@@ -70,6 +71,7 @@ Eg.
 It is not recommended to bind the container to the "host" network - this will collide any with other DHCP servers on any network that the host is connected to and may cause losing connection to the host.
 
 To bind container to specific physical (or vlan) interface you need to create "IPVlan" docker network.
+Please note that host will not be able to reach containers using interface used by IPVlan network.
 
 ```shell
 docker network create --driver ipvlan --subnet=[subnet] --opt parent=[host-interface] [new-network-name]
@@ -270,6 +272,27 @@ Running Kea:
 - Run `docker compose up` to run all containers
 
 # Other
+
+## Docker issues
+
+There are some issues with using DHCP, and IPv6 in Docker Engine that are good to know.
+
+- Docker does not allow to select order of connecting of the network interfaces. (priority does not work)  \
+https://github.com/docker/cli/issues/1372
+
+- IPv6 is an EXPERIMENTAL feature in docker. \
+https://docs.docker.com/config/daemon/ipv6/
+
+- IPv6-only networks are not available without heavy workarounds  
+https://github.com/moby/moby/issues/32850
+
+- The base value for the docker network IPv6 needs a minimum prefix length of /64. This is due to an integer overflow in the Docker daemon. This does not affect DHCP subnet. \
+https://github.com/moby/moby/issues/42801
+
+- The difference between the docker network pool length and the pool size can't be larger than 24. Defining an excessive number of subnets causes the daemon to consume all available memory. This does not affect DHCP pool. \
+https://github.com/moby/moby/issues/40275
+
+- Docker assignes IP addresses to container network interfaces. We can select the IP, but can not skip this step.
 
 ## Support
 
