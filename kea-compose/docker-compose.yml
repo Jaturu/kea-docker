@@ -17,7 +17,7 @@ services:
       kea-20-backend: # internal network for communication with database
     volumes:
       - type: bind
-        source: ./kea-dhcp4 # configuration files
+        source: ./config/kea # configuration files
         target: /etc/kea
       - kea4-var:/var/lib/kea
 
@@ -34,7 +34,7 @@ services:
       kea-20-backend: # internal network for communication with database
     volumes:
       - type: bind
-        source: ./kea-dhcp6 # configuration files
+        source: ./config/kea # configuration files
         target: /etc/kea
       - kea6-var:/var/lib/kea
 
