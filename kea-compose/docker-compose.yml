@@ -29,7 +29,7 @@ services:
         condition: service_healthy
     networks:
       kea-10-ipvlan: # network that binds container to host network interface.
-        ipv4_address: ${IP6_v4} # ip for kea6 server
+        ipv4_address: ${IP6_V4} # ip for kea6 server
         ipv6_address: ${IP6} # set static to avoid conflicts with kea4
       kea-20-backend: # internal network for communication with database
     volumes:
