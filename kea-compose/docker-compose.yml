@@ -1,22 +1,25 @@
 volumes:
   database:
-  var:
+  kea4-var:
+  kea6-var:
 
 services:
   kea4:
     image: kea-dhcp4:${VERSION}
     restart: always
-    depends_on:
+    depends_on: # delay start until database is ready
       db:
         condition: service_healthy
     networks:
-      - kea-0-macvlan
-      - kea-1-internal
+      kea-10-ipvlan: # network that binds container to host network interface.
+        ipv4_address: ${IP4} # ip for kea4 server
+        ipv6_address: ${IP4_V6} # set static to avoid conflicts with kea6
+      kea-20-backend: # internal network for communication with database
     volumes:
       - type: bind
-        source: ./config/kea
+        source: ./kea-dhcp4 # configuration files
         target: /etc/kea
-      - var:/var/lib/kea
+      - kea4-var:/var/lib/kea
 
   kea6:
     image: kea-dhcp6:${VERSION}
@@ -25,15 +28,15 @@ services:
       db:
         condition: service_healthy
     networks:
-      - kea-0-macvlan
-      # Comment "- kea-0-macvlan" above, and uncomment "- kea-0-v6macvlan" below for separate v4 and v6 interfacee
-      # - kea-0-v6macvlan
-      - kea-1-internal
+      kea-10-ipvlan: # network that binds container to host network interface.
+        ipv4_address: ${IP6} # ip for kea6 server
+        ipv6_address: ${IP6_V4} # set static to avoid conflicts with kea4
+      kea-20-backend: # internal network for communication with database
     volumes:
       - type: bind
-        source: ./config/kea
+        source: ./kea-dhcp6 # configuration files
         target: /etc/kea
-      - var:/var/lib/kea
+      - kea6-var:/var/lib/kea
 
   db:
     image: postgres
@@ -43,25 +46,25 @@ services:
     environment:
       POSTGRES_PASSWORD: keatest
       POSTGRES_USER: keadb
-    networks:
-      - kea-1-internal
     volumes:
       - database:/var/lib/posgresql
       - type: bind
-        source: ./initdb
+        source: ./initdb # database setup script from kea for first run
         target: /docker-entrypoint-initdb.d
+    networks:
+      kea-20-backend:
+
 
 networks:
-  kea-0-macvlan:
-    name: kea-0-macvlan
-    driver: macvlan
+  kea-10-ipvlan: # network that binds container to host network interface.
+    name: kea-10-ipvlan
+    driver: ipvlan
     driver_opts:
-      parent: ${ETH}
-# Uncomment section below for separate v4 and v6 interface
-#  kea-0-v6macvlan:
-#    name: kea-0-v6macvlan
-#    driver: macvlan
-#    driver_opts:
-#      parent: ${ETH6}
-  kea-1-internal:
-    name: kea-1-internal
+      parent: ${ETH} #  host interface that kea containers will use !!!!!!
+    enable_ipv6: true
+    ipam:
+      config:
+        - subnet: ${SUBNET6} # subnet for kea6 server
+        - subnet: ${SUBNET4} # subnet for kea4 server
+  kea-20-backend: # internal network for communication with database
+    name: kea-20-backend

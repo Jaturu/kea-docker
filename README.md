@@ -66,14 +66,14 @@ Eg.
 
 It is not recommended to bind the container to the "host" network - this will collide any with other DHCP servers on any network that the host is connected to and may cause losing connection to the host.
 
-To bind container to specific physical (or vlan) interface you need to create "MacVlan" docker network.
+To bind container to specific physical (or vlan) interface you need to create "IPVlan" docker network.
 
 ```shell
-docker network create --driver macvlan --opt parent=[host-interface] [new-network-name]
+docker network create --driver ipvlan --opt parent=[host-interface] [new-network-name]
 ```
 Eg.
 ```shell
-docker network create --driver macvlan --opt parent=enp0s9 macvlan0
+docker network create --driver ipvlan --opt parent=enp0s9 ipvlan0
 ```
 
 Then add parameter to `docker run` command:
@@ -81,7 +81,7 @@ Then add parameter to `docker run` command:
 --net=[new-network-name]
 ```
 
-Kea DDNS does not need to be run using MacVlan network. It can be bound using default docker bridge.
+Kea DDNS does not need to be run using IPVlan network. It can be bound using default docker bridge.
 
 ### Ports
 
@@ -93,13 +93,13 @@ List of available ports.
 
 Kea DHCP v4:
 - 67/tpc - Bulk Lease Querry
-- 67/udp - DHCP port
+- 67/udp - DHCP port (Only Relay traffic will be forwarded)
 - 8000/tcp - Control Agent
 - 8001/tcp - High Availability communication
 
 Kea DHCP v6:
-- 547/tpc - DHCP ports and Bulk Lease Querry
-- 547/udp - Bulk Lease Querry
+- 547/tpc - Bulk Lease Querry
+- 547/udp - DHCP port (Only Relay traffic will be forwarded)
 - 8000/tcp - Control Agent
 - 8001/tcp - High Availability communication
 
@@ -124,10 +124,11 @@ For v6 address you need to use a square bracket like this:
 ## Examples
 
 Here are some example commands to run Kea images. Please modify them for your system, and provide configuration files in volumes.
+We recommend looking at working setup in kea-compose.
 
-Creating MacVlan network to use with the containers.
+Creating IPVlan network to use with the containers.
 ```
-docker network create --driver macvlan --opt parent=enp0s2 macvlan0
+docker network create --driver ipvlan --opt parent=enp0s2 ipvlan0
 ```
 
 Kea DHCP v4 with all volumes:
@@ -135,7 +136,7 @@ Kea DHCP v4 with all volumes:
 docker run --name kea4  \
                   --volume=./config/kea:/etc/kea  \
                   --volume=./:/var/lib/kea  \
-                  --net=macvlan0  \
+                  --net=ipvlan0  \
                   docker.cloudsmith.io/isc/docker/kea-dhcp4:2.5.2
 ```
 
@@ -144,12 +145,12 @@ Kea DHCP v6 with all volumes:
 docker run --name kea6  \
                   --volume=./config/kea:/etc/kea  \
                   --volume=./:/var/lib/kea  \
-                  --net=macvlan0  \
+                  --net=ipvlan0  \
                   docker.cloudsmith.io/isc/docker/kea-dhcp6:2.5.2
 ```
 
 Kea DDNS with all volumes and ports: \
-(Kea DDNS does not need to be run using MacVlan network. It can be bound using default docker bridge) \
+(Kea DDNS does not need to be run using IPVlan network. It can be bound using default docker bridge) \
 (Please note any port colisions with Kea containers. You may need to change port 8000 on host side to eg. 8002)
 ```shell
 docker run  --name kea-ddns  \
@@ -249,7 +250,7 @@ sudo docker run --volume=./config/kea:/etc/kea  \
 
 Kea-compose script allows for easy deployment of kea-dhcp server. (Including kea-dhcp4, kea-dhcp6, and postgresql lease database)
 
-Please note that you need to have IPv4 and IPv6 addresses used by Kea assigned to your host.
+Please note that you need to have IPv4 and IPv6 addresses used by Kea assigned to your host !
 
 Preparation:
 - Edit `.env` file to set your parameters.
