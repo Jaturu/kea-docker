@@ -1,5 +1,10 @@
 #!/bin/sh
+
+script_path=$(cd "$(dirname "${0}")" && pwd)
+cd "${script_path}" || exit
+
 . ./.env
+
 while getopts 'v:' OPTION; do
   case "$OPTION" in
     v)
@@ -13,9 +18,6 @@ while getopts 'v:' OPTION; do
   esac
 done
 shift "$((OPTIND -1))"
-
-script_path=$(cd "$(dirname "${0}")" && pwd)
-cd "${script_path}" || exit
 
 echo "Kea version selected $VERSION"
 cd "${script_path}"/../kea-dhcp4 || exit
