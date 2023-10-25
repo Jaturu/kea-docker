@@ -1,3 +1,13 @@
+* 10 [doc] marcing
+
+    Readme rewrite to include ipvlan networks.
+    (Gitlab #31)
+
+* 9 [build] marcing
+
+    Kea-compose moved to ipvlan networks.
+    (Gitlab #31)
+
 * 8 [build] wlodek
 
     Run kea under kea user not root.
