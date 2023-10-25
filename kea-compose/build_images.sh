@@ -31,14 +31,14 @@ wget "https://gitlab.isc.org/isc-projects/kea/raw/Kea-$(echo "${VERSION}" | cut 
 cat > "config/kea/subnets4.json" <<EOF
 "subnet4": [
   {
-  "id": 1,
-  "subnet": "$SUBNET4",
-  "pools": [
-    {
-      "pool": "$POOL4"
-    }
-  ],
-  "interface": "eth0"
+    "id": 1,
+    "subnet": "$SUBNET4",
+    "pools": [
+      {
+        "pool": "$POOL4"
+      }
+    ],
+    "interface": "eth0"
   }
 ]
 EOF
@@ -46,14 +46,14 @@ EOF
 cat > "config/kea/subnets6.json" <<EOF
 "subnet6": [
   {
-  "id": 1,
-  "subnet": "$SUBNET6",
-  "pools": [
-    {
-      "pool": "$POOL6"
-    }
-  ],
-  "interface": "eth0"
+    "id": 1,
+    "subnet": "$SUBNET6",
+    "pools": [
+      {
+        "pool": "$POOL6"
+      }
+    ],
+    "interface": "eth0"
   }
 ]
 EOF
