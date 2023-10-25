@@ -25,8 +25,8 @@ RUN cp /etc/apk/repositories /etc/apk/repositories_backup && \
     apk update && \
     # Install main Kea packaegs
     apk add --no-cache isc-kea-dhcp-ddns~=${VERSION} isc-kea-ctrl-agent~=${VERSION} supervisor && \
-    # Install ddns hook which is available both in subscribers and enterprise
-    if [ -n "$TOKEN" ] &&  { [ "$PREMIUM" = "SUBSCRIBERS" ] || [ "$PREMIUM" = "ENTERPRISE" ]; }; then \
+    # Install ddns hook which is available both in subscription and enterprise
+    if [ -n "$TOKEN" ] &&  { [ "$PREMIUM" = "SUBSCRIPTION" ] || [ "$PREMIUM" = "ENTERPRISE" ]; }; then \
     curl -1sLf "https://dl.cloudsmith.io/${TOKEN}/isc/kea-$(echo "${VERSION}" | cut -c1;)-$(echo "${VERSION}" | cut -c3;)-prv/setup.alpine.sh" | bash && \
     apk add --no-cache \
         isc-kea-premium-gss-tsig~=${VERSION}; \

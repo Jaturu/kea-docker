@@ -28,7 +28,7 @@ RUN dnf update -y && \
         isc-kea-ctrl-agent-${K_VERSION}.fc${F_VERSION} \
         supervisor && \
     # If token is provided add premium Cloudsmith repository
-    if [ -n "$TOKEN" ] && { [ "$PREMIUM" = "SUBSCRIBERS" ] || [ "$PREMIUM" = "ENTERPRISE" ]; } then \
+    if [ -n "$TOKEN" ] && { [ "$PREMIUM" = "SUBSCRIPTION" ] || [ "$PREMIUM" = "ENTERPRISE" ]; } then \
     curl -1sLkf "https://dl.cloudsmith.io/${TOKEN}/isc/kea-$(echo "${K_VERSION}" | cut -c1;)-$(echo "${K_VERSION}" | cut -c3;)-prv/setup.rpm.sh" | bash && \
     dnf update -y && \
     # Install premium Kea hooks

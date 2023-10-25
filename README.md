@@ -198,7 +198,7 @@ If a user has access to premium packages, it should be added during the build pr
 cd kea-dhcp4 && docker build --build-arg VERSION=2.3.8-r20230530063557 --build-arg TOKEN=<TOKEN> --tag kea4 .
 ```
 
-If the provided token grants access to subscribers or enterprise packages, it should be specified:
+If the provided token grants access to subscription or enterprise packages, it should be specified:
 
 ```shell
 cd kea-dhcp4 && docker build --build-arg VERSION=2.3.8-r20230530063557 --build-arg TOKEN=<TOKEN> --build-arg PREMIUM=ENTERPRISE --tag kea4 .

@@ -35,8 +35,8 @@ RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recomme
         isc-kea-premium-forensic-log=${VERSION} \
         isc-kea-premium-host-cmds=${VERSION}; \
     fi && \
-    # Install subscribers Kea hooks (provided TOKEN should have access to those pkgs)
-    if [ -n "$TOKEN" ] && [ "$PREMIUM" = "SUBSCRIBERS" ]; then \
+    # Install subscription Kea hooks (provided TOKEN should have access to those pkgs)
+    if [ -n "$TOKEN" ] && [ "$PREMIUM" = "SUBSCRIPTION" ]; then \
     apt-get install --no-install-recommends -y \
         isc-kea-premium-cb-cmds=${VERSION} \
         isc-kea-premium-class-cmds=${VERSION} \
@@ -45,7 +45,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recomme
         isc-kea-premium-limits=${VERSION} \
         isc-kea-premium-subnet-cmds=${VERSION}; \
     fi && \
-    # Install subscribers and enterprise Kea hooks (provided TOKEN should have access to those pkgs)
+    # Install subscription and enterprise Kea hooks (provided TOKEN should have access to those pkgs)
     if [ -n "$TOKEN" ] && [ "$PREMIUM" = "ENTERPRISE" ]; then \
     apt-get install --no-install-recommends -y \
         isc-kea-premium-cb-cmds=${VERSION} \

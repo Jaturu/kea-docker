@@ -36,8 +36,8 @@ RUN cp /etc/apk/repositories /etc/apk/repositories_backup && \
         isc-kea-premium-forensic-log~=${VERSION} \
         isc-kea-premium-host-cmds~=${VERSION}; \
     fi && \
-    # Install subscribers Kea hooks (provided TOKEN should have access to those pkgs)
-    if [ -n "$TOKEN" ] && [ "$PREMIUM" = "SUBSCRIBERS" ]; then \
+    # Install subscription Kea hooks (provided TOKEN should have access to those pkgs)
+    if [ -n "$TOKEN" ] && [ "$PREMIUM" = "SUBSCRIPTION" ]; then \
     apk add --no-cache \
         isc-kea-premium-cb-cmds~=${VERSION} \
         isc-kea-premium-class-cmds~=${VERSION} \
@@ -47,7 +47,7 @@ RUN cp /etc/apk/repositories /etc/apk/repositories_backup && \
         isc-kea-premium-ping-check~=${VERSION} \
         isc-kea-premium-subnet-cmds~=${VERSION}; \
     fi && \
-    # Install subscribers and enterprise Kea hooks (provided TOKEN should have access to those pkgs)
+    # Install subscription and enterprise Kea hooks (provided TOKEN should have access to those pkgs)
     if [ -n "$TOKEN" ] && [ "$PREMIUM" = "ENTERPRISE" ]; then \
     apk add --no-cache \
         isc-kea-premium-cb-cmds~=${VERSION} \

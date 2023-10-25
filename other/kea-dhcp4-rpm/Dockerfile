@@ -39,8 +39,8 @@ RUN dnf update -y && \
         isc-kea-premium-forensic-log-${K_VERSION}.fc${F_VERSION} \
         isc-kea-premium-host-cmds-${K_VERSION}.fc${F_VERSION}; \
     fi && \
-    # Install subscribers Kea hooks (provided TOKEN should have access to those pkgs)
-    if [ -n "$TOKEN" ] && [ "$PREMIUM" = "SUBSCRIBERS" ]; then \
+    # Install subscription Kea hooks (provided TOKEN should have access to those pkgs)
+    if [ -n "$TOKEN" ] && [ "$PREMIUM" = "SUBSCRIPTION" ]; then \
     dnf install -y \
         isc-kea-premium-cb-cmds-${K_VERSION}.fc${F_VERSION} \
         isc-kea-premium-class-cmds-${K_VERSION}.fc${F_VERSION} \
@@ -50,7 +50,7 @@ RUN dnf update -y && \
         # isc-kea-premium-ping-check-${K_VERSION}.fc${F_VERSION}  \
         isc-kea-premium-subnet-cmds-${K_VERSION}.fc${F_VERSION}; \
     fi && \
-    # Install subscribers and enterprise Kea hooks (provided TOKEN should have access to those pkgs)
+    # Install subscription and enterprise Kea hooks (provided TOKEN should have access to those pkgs)
     if [ -n "$TOKEN" ] && [ "$PREMIUM" = "ENTERPRISE" ]; then \
     dnf install -y \
         isc-kea-premium-cb-cmds-${K_VERSION}.fc${F_VERSION} \
