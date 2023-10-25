@@ -2,7 +2,7 @@
 
 This repository contains Docker files used to build official Kea images.
 You can use them to build images locally with desired modifications.
-Also, Kea-Compose server allows for rapid deployment of Kea with IPv4, IPv6 and PostgerSQL database.
+Also, Kea-Compose script allows for rapid deployment of Kea with IPv4, IPv6 and PostgerSQL database.
 
 Those Docker files and images are based on Alpine 3.17.
 
