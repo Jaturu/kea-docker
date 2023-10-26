@@ -44,7 +44,6 @@ RUN cp /etc/apk/repositories /etc/apk/repositories_backup && \
         isc-kea-premium-host-cache~=${VERSION} \
         isc-kea-premium-lease-query~=${VERSION} \
         isc-kea-premium-limits~=${VERSION} \
-        isc-kea-premium-ping-check~=${VERSION} \
         isc-kea-premium-subnet-cmds~=${VERSION}; \
     fi && \
     # Install subscription and enterprise Kea hooks (provided TOKEN should have access to those pkgs)
@@ -55,7 +54,6 @@ RUN cp /etc/apk/repositories /etc/apk/repositories_backup && \
         isc-kea-premium-host-cache~=${VERSION} \
         isc-kea-premium-lease-query~=${VERSION} \
         isc-kea-premium-limits~=${VERSION} \
-        isc-kea-premium-ping-check~=${VERSION} \
         isc-kea-premium-subnet-cmds~=${VERSION} \
         isc-kea-premium-rbac~=${VERSION}; \
     fi && \
