@@ -11,7 +11,7 @@ LABEL org.opencontainers.image.authors="Kea Developers <kea-dev@lists.isc.org>"
 
 # Add Kea packages from cloudsmith. Make sure the version matches that of the Alpine version.
 # Also, install all the open source hooks. When updating, new instructions can
-# be found at: https://cloudsmith.io/~isc/repos/kea-2-3/setup/#formats-alpine
+# be found at: https://cloudsmith.io/~isc/repos/kea-2-5/setup/#formats-alpine
 ARG VERSION=2.5
 ARG TOKEN
 ARG PREMIUM
@@ -63,8 +63,8 @@ RUN cp /etc/apk/repositories /etc/apk/repositories_backup && \
     mv /etc/apk/repositories_backup /etc/apk/repositories && \
     # Create directory for supervisor logs
     mkdir -p /var/log/supervisor && \
-    # remove curl
-    apk del curl
+    # remove curl and bash
+    apk del curl bash
 
 VOLUME ["/etc/kea", "/var/lib/kea/"]
 
