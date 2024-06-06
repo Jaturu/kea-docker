@@ -6,13 +6,13 @@
 # - open source hooks
 # - possible to build with premium hooks
 
-FROM alpine:3.19
+FROM alpine:3.20
 LABEL org.opencontainers.image.authors="Kea Developers <kea-dev@lists.isc.org>"
 
 # Add Kea packages from cloudsmith. Make sure the version matches that of the Alpine version.
 # Also, install all the open source hooks. When updating, new instructions can
 # be found at: https://cloudsmith.io/~isc/repos/kea-2-5/setup/#formats-alpine
-ARG VERSION=2.5
+ARG VERSION=2.6
 ARG TOKEN
 ARG PREMIUM
 
