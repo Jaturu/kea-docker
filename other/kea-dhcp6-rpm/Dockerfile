@@ -19,9 +19,14 @@ ARG PREMIUM
 
 #TODO curl is using -k version to ignore not updated ca-certificates, certificates should be updated rather than mitigate this
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-RUN dnf update -y
+RUN dnf update -y && \
     # Setup Cloudsmith repo
-RUN curl -1skLf "https://dl.cloudsmith.io/public/isc/kea-$(echo "${K_VERSION}" | cut -c1;)-$(echo "${K_VERSION}" | cut -c3;)/setup.rpm.sh" | bash && \
+    if test "$(expr "$(echo "${VERSION}" | cut -d '.' -f 2)" % 2)" = 0; then \
+        repo="kea-$(echo "${VERSION}" | cut -d '.' -f 1)-$(echo "${VERSION}" | cut -d '.' -f 2)"; \
+    else \
+        repo='kea-dev'; \
+    fi && \
+    curl -1ksLf "https://dl.cloudsmith.io/public/isc/${repo}/setup.rpm.sh" | bash && \
     dnf update && \
     # Install main Kea packaegs and supervisor
     dnf install -y isc-kea-dhcp6-${K_VERSION}.fc${F_VERSION} \
@@ -30,7 +35,7 @@ RUN curl -1skLf "https://dl.cloudsmith.io/public/isc/kea-$(echo "${K_VERSION}" |
         supervisor && \
     # If token is provided add premium Cloudsmith repository
     if [ -n "$TOKEN" ]; then \
-    curl -1skLf "https://dl.cloudsmith.io/${TOKEN}/isc/kea-$(echo "${K_VERSION}" | cut -c1;)-$(echo "${K_VERSION}" | cut -c3;)-prv/setup.rpm.sh" | bash && \
+    curl -1sLkf "https://dl.cloudsmith.io/${TOKEN}/isc/${repo}-prv/setup.rpm.sh" | bash && \
     dnf update -y && \
     # Install premium Kea hooks
     dnf install -y \
@@ -44,7 +49,7 @@ RUN curl -1skLf "https://dl.cloudsmith.io/public/isc/kea-$(echo "${K_VERSION}" |
     dnf install -y \
         isc-kea-premium-cb-cmds-${K_VERSION}.fc${F_VERSION} \
         isc-kea-premium-class-cmds-${K_VERSION}.fc${F_VERSION} \
-        isc-kea-premium-host-cache-${K_VERSION}.fc${F_VERSION} \            
+        isc-kea-premium-host-cache-${K_VERSION}.fc${F_VERSION} \
         isc-kea-premium-lease-query-${K_VERSION}.fc${F_VERSION} \
         isc-kea-premium-limits-${K_VERSION}.fc${F_VERSION} \
         isc-kea-premium-subnet-cmds-${K_VERSION}.fc${F_VERSION}; \
@@ -54,7 +59,7 @@ RUN curl -1skLf "https://dl.cloudsmith.io/public/isc/kea-$(echo "${K_VERSION}" |
     dnf install -y \
         isc-kea-premium-cb-cmds-${K_VERSION}.fc${F_VERSION} \
         isc-kea-premium-class-cmds-${K_VERSION}.fc${F_VERSION} \
-        isc-kea-premium-host-cache-${K_VERSION}.fc${F_VERSION} \            
+        isc-kea-premium-host-cache-${K_VERSION}.fc${F_VERSION} \
         isc-kea-premium-lease-query-${K_VERSION}.fc${F_VERSION} \
         isc-kea-premium-limits-${K_VERSION}.fc${F_VERSION} \
         isc-kea-premium-subnet-cmds-${K_VERSION}.fc${F_VERSION} \

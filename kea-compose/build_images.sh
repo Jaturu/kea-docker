@@ -26,7 +26,7 @@ cd "${script_path}"/../kea-dhcp6 || exit
 docker build --tag kea-dhcp6:"${VERSION}" --build-arg VERSION="${VERSION}" .
 cd "${script_path}" || exit
 mkdir -p initdb
-wget "https://gitlab.isc.org/isc-projects/kea/raw/Kea-$(echo "${VERSION}" | cut -c1;).$(echo "${VERSION}" | cut -c3;).$(echo "${VERSION}" | cut -c5;)/src/share/database/scripts/pgsql/dhcpdb_create.pgsql" -O ./initdb/dhcpdb_create.sql
+wget "https://gitlab.isc.org/isc-projects/kea/raw/Kea-$(echo "${VERSION}" | cut -d '.' -f 1).$(echo "${VERSION}" | cut -d '.' -f 2).$(echo "${VERSION}" | cut -d '.' -f 3)/src/share/database/scripts/pgsql/dhcpdb_create.pgsql" -O ./initdb/dhcpdb_create.sql
 
 cat > "config/kea/subnets4.json" <<EOF
 "subnet4": [

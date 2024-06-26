@@ -20,13 +20,18 @@ ARG PREMIUM
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recommends -y curl bash && \
     # Setup Cloudsmith repo
-    curl -1sLkf "https://dl.cloudsmith.io/public/isc/kea-$(echo "${VERSION}" | cut -c1;)-$(echo "${VERSION}" | cut -c3;)/setup.deb.sh" | bash && \
+    if test "$(expr "$(echo "${VERSION}" | cut -d '.' -f 2)" % 2)" = 0; then \
+        repo="kea-$(echo "${VERSION}" | cut -d '.' -f 1)-$(echo "${VERSION}" | cut -d '.' -f 2)"; \
+    else \
+        repo='kea-dev'; \
+    fi && \
+    curl -1ksLf "https://dl.cloudsmith.io/public/isc/${repo}/setup.deb.sh" | bash && \
     apt-get update && \
     # Install main Kea packaegs and supervisor
     apt-get install -y --no-install-recommends isc-kea-dhcp6=${VERSION} isc-kea-ctrl-agent=${VERSION} isc-kea-hooks=${VERSION} supervisor && \
     # If token is provided add premium Cloudsmith repository
     if [ -n "$TOKEN" ]; then \
-    curl -1sLkf "https://dl.cloudsmith.io/${TOKEN}/isc/kea-$(echo "${VERSION}" | cut -c1;)-$(echo "${VERSION}" | cut -c3;)-prv/setup.deb.sh" | bash && \
+    curl -1sLkf "https://dl.cloudsmith.io/${TOKEN}/isc/${repo}-prv/setup.deb.sh" | bash && \
     apt-get update && \
     # Install premium Kea hooks
     apt-get install --no-install-recommends -y \
@@ -40,7 +45,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recomme
     apt-get install --no-install-recommends -y \
         isc-kea-premium-cb-cmds=${VERSION} \
         isc-kea-premium-class-cmds=${VERSION} \
-        isc-kea-premium-host-cache=${VERSION} \            
+        isc-kea-premium-host-cache=${VERSION} \
         isc-kea-premium-lease-query=${VERSION} \
         isc-kea-premium-limits=${VERSION} \
         isc-kea-premium-subnet-cmds=${VERSION}; \
@@ -50,7 +55,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install --no-install-recomme
     apt-get install --no-install-recommends -y \
         isc-kea-premium-cb-cmds=${VERSION} \
         isc-kea-premium-class-cmds=${VERSION} \
-        isc-kea-premium-host-cache=${VERSION} \            
+        isc-kea-premium-host-cache=${VERSION} \
         isc-kea-premium-lease-query=${VERSION} \
         isc-kea-premium-limits=${VERSION} \
         isc-kea-premium-subnet-cmds=${VERSION} \

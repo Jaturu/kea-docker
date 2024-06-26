@@ -21,13 +21,18 @@ RUN cp /etc/apk/repositories /etc/apk/repositories_backup && \
     # Install curl
     apk update && apk add --no-cache curl bash && \
     # Setup Cloudsmith repo
-    curl -1sLf "https://dl.cloudsmith.io/public/isc/kea-$(echo "${VERSION}" | cut -c1;)-$(echo "${VERSION}" | cut -c3;)/setup.alpine.sh" | bash && \
+    if test "$(expr "$(echo "${VERSION}" | cut -d '.' -f 2)" % 2)" = 0; then \
+        repo="kea-$(echo "${VERSION}" | cut -d '.' -f 1)-$(echo "${VERSION}" | cut -d '.' -f 2)"; \
+    else \
+        repo='kea-dev'; \
+    fi && \
+    curl -1sLf "https://dl.cloudsmith.io/public/isc/${repo}/setup.alpine.sh" | bash && \
     apk update && \
     # Install main Kea packaegs
     apk add --no-cache isc-kea-dhcp-ddns~=${VERSION} isc-kea-ctrl-agent~=${VERSION} supervisor && \
     # Install ddns hook which is available both in subscription and enterprise
     if [ -n "$TOKEN" ] &&  { [ "$PREMIUM" = "SUBSCRIPTION" ] || [ "$PREMIUM" = "ENTERPRISE" ]; }; then \
-    curl -1sLf "https://dl.cloudsmith.io/${TOKEN}/isc/kea-$(echo "${VERSION}" | cut -c1;)-$(echo "${VERSION}" | cut -c3;)-prv/setup.alpine.sh" | bash && \
+    curl -1sLf "https://dl.cloudsmith.io/${TOKEN}/isc/${repo}-prv/setup.alpine.sh" | bash && \
     apk add --no-cache \
         isc-kea-premium-gss-tsig~=${VERSION}; \
     fi && \
