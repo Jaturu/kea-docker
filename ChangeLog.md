@@ -1,3 +1,8 @@
+* 11 [build] marcing
+
+    Removed unnecesary supervisor http service.
+    (Gitlab #39)
+
 * 10 [doc] marcing
 
     Readme rewrite to include ipvlan networks.
