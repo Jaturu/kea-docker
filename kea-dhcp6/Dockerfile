@@ -18,8 +18,8 @@ ARG PREMIUM
 
 SHELL ["/bin/ash", "-o", "pipefail", "-c"]
 RUN cp /etc/apk/repositories /etc/apk/repositories_backup && \
-    # Install curl and bash
-    apk update && apk add --no-cache curl bash && \
+    # Install curl and bash for cloudsmith's script. Tzdata to allow timezone change.
+    apk update && apk add --no-cache curl bash tzdata && \
     # Setup Cloudsmith repo
     if test "$(expr "$(echo "${VERSION}" | cut -d '.' -f 2)" % 2)" = 0; then \
         repo="kea-$(echo "${VERSION}" | cut -d '.' -f 1)-$(echo "${VERSION}" | cut -d '.' -f 2)"; \

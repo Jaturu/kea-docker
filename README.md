@@ -290,6 +290,12 @@ Running Kea:
 
 # Other
 
+Timezone can be set using TZ enviromental value. \
+for example: 
+```shell
+docker run -e TZ=Europe/Warsaw kea4
+```
+
 ## Docker Issues
 
 There are some issues with using DHCP and IPv6 in Docker Engine that are good to know.
