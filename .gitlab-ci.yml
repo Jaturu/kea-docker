@@ -28,10 +28,7 @@ dhcp4:
     - sleep 5
     - docker logs kea-dhcp4 | grep "kea-dhcp4 entered RUNNING state"
     # send a request to the control channel
-    - curl -X POST \
-      -H "Content-Type: application/json" \
-      -d '{"command":"status-get"}' \
-      http://localhost:8000/
+
     # Clean up, while also checking that the container can be stopped
     - docker stop kea-dhcp4
 
@@ -48,10 +45,7 @@ dhcp6:
     - sleep 5
     - docker logs kea-dhcp6 | grep "kea-dhcp6 entered RUNNING state"
     # send a request to the control channel
-    - curl -X POST \
-      -H "Content-Type: application/json" \
-      -d '{"command":"status-get"}' \
-      http://localhost:8000/
+    - curl -X POST -H "Content-Type: application/json" -d '{"command":"status-get"}' http://localhost:8000/
     # Clean up, while also checking that the container can be stopped
     - docker stop kea-dhcp6
 
@@ -68,10 +62,7 @@ ddns:
     - sleep 5
     - docker logs kea-dhcp-ddns | grep "kea-dhcp-ddns entered RUNNING state"
     # send a request to the control channel
-    - curl -X POST \
-      -H "Content-Type: application/json" \
-      -d '{"command":"status-get"}' \
-      http://localhost:8000/
+    - curl -X POST -H "Content-Type: application/json" -d '{"command":"status-get"}' http://localhost:8000/
     # Clean up, while also checking that the container can be stopped
     - docker stop kea-dhcp-ddns
 
