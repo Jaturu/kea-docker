@@ -12,7 +12,7 @@ LABEL org.opencontainers.image.authors="Kea Developers <kea-dev@lists.isc.org>"
 # Add Kea packages from cloudsmith. Make sure the version matches that of the Alpine version.
 # Also, install all the open source hooks. When updating, new instructions can
 # be found at: https://cloudsmith.io/~isc/repos/kea-2-5/setup/#formats-alpine
-ARG VERSION=2.6
+ARG VERSION=2.7
 ARG TOKEN
 ARG PREMIUM
 
@@ -29,7 +29,7 @@ RUN cp /etc/apk/repositories /etc/apk/repositories_backup && \
     curl -1sLf "https://dl.cloudsmith.io/public/isc/${repo}/setup.alpine.sh" | bash && \
     apk update && \
     # Install main Kea packaegs
-    apk add --no-cache isc-kea-dhcp-ddns~=${VERSION} isc-kea-ctrl-agent~=${VERSION} supervisor && \
+    apk add --no-cache isc-kea-dhcp-ddns~=${VERSION} && \
     # Install ddns hook which is available both in subscription and enterprise
     if [ -n "$TOKEN" ] &&  { [ "$PREMIUM" = "SUBSCRIPTION" ] || [ "$PREMIUM" = "ENTERPRISE" ]; }; then \
     curl -1sLf "https://dl.cloudsmith.io/${TOKEN}/isc/${repo}-prv/setup.alpine.sh" | bash && \
@@ -38,28 +38,16 @@ RUN cp /etc/apk/repositories /etc/apk/repositories_backup && \
     fi && \
     # Revert Cloudsmith repositories
     mv /etc/apk/repositories_backup /etc/apk/repositories && \
-    # Create directory for supervisor logs
-    mkdir -p /var/log/supervisor && \
     # remove curl and bash
     apk del curl bash
 
-# Copy supervisor configs
-COPY supervisord.conf /etc/supervisor/supervisord.conf
-COPY supervisor-kea-dhcp-ddns.conf /etc/supervisor/conf.d/kea-dhcp-ddns.conf
-COPY supervisor-kea-agent.conf /etc/supervisor/conf.d/kea-agent.conf
-
-# Copy Kea configs
-COPY kea-ctrl-agent.conf /etc/kea/kea-ctrl-agent.conf
 COPY kea-dhcp-ddns.conf /etc/kea/kea-dhcp-ddns.conf
 
 # And give ability to overwrite Kea default config
-
 VOLUME ["/etc/kea"]
 
-# 8000 ctrl agent
-# 8001 HA MT
-# 547 blq
+# 8000 command control channel
+# 53001 ddns
 EXPOSE 8000/tcp 53001/udp
 
-CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
-HEALTHCHECK CMD [ "supervisorctl", "status" ]
+CMD ["/usr/sbin/kea-dhcp-ddns", "-c", "/etc/kea/kea-dhcp-ddns.conf"]
