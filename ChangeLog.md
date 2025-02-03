@@ -1,7 +1,14 @@
-* 11 [build] marcing
+* 12 [build] marcing
 
     Removed unnecesary supervisor http service.
+    Patch provided by Anton Castelli
     (Gitlab #39)
+
+* 11 [build] marcing
+    Added ability to change timezone using enviromental value.
+    Patch provided by Anton Castelli
+    (Gitlab #38)
+
 
 * 10 [doc] marcing
 
