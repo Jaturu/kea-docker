@@ -12,6 +12,7 @@ services:
   before_script:
     - whoami
     - cat /etc/os-release
+    - apk add --no-cache curl
     - docker --version
     - docker-compose --version
 
