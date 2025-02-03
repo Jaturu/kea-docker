@@ -28,7 +28,7 @@ dhcp4:
     - sleep 5
     - docker logs kea-dhcp4 | grep "DHCP4_STARTED Kea DHCPv4 server version"
     - sleep 2
-    - bash .gitlab-ci/send_status_get
+    - /bin/sh .gitlab-ci/send_status_get
     # Clean up, while also checking that the container can be stopped
     - docker stop kea-dhcp4
 
@@ -45,7 +45,7 @@ dhcp6:
     - sleep 5
     - docker logs kea-dhcp6 | grep "DHCP6_STARTED Kea DHCPv6 server version"
     - sleep 2
-    - bash .gitlab-ci/send_status_get
+    - /bin/sh .gitlab-ci/send_status_get
     # Clean up, while also checking that the container can be stopped
     - docker stop kea-dhcp6
 
@@ -62,7 +62,7 @@ ddns:
     - sleep 5
     - docker logs kea-dhcp-ddns | grep "DHCP_DDNS_STARTED Kea DHCP-DDNS server version"
     - sleep 2
-    - bash .gitlab-ci/send_status_get
+    - /bin/sh .gitlab-ci/send_status_get
     # Clean up, while also checking that the container can be stopped
     - docker stop kea-dhcp-ddns
 
