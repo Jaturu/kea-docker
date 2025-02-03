@@ -9,7 +9,6 @@
     Patch provided by Anton Castelli
     (Gitlab #38)
 
-
 * 10 [doc] marcing
 
     Readme rewrite to include ipvlan networks.
