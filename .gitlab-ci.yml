@@ -23,7 +23,7 @@ dhcp4:
     # Build the image.
     - docker build -t kea-dhcp4 .
     # Run the dhcp4 container
-    - docker run -p 8000:8000 -d --name kea-dhcp4 kea-dhcp4
+    - docker run -d --name kea-dhcp4 kea-dhcp4
     # Check that something was logged.
     - sleep 5
     - docker logs kea-dhcp4 | grep "kea-dhcp4 entered RUNNING state"
@@ -38,7 +38,7 @@ dhcp6:
     # Build the image.
     - docker build -t kea-dhcp6 .
     # Run the dhcp4 container
-    - docker run -p 8000:8000 -d --name kea-dhcp6 kea-dhcp6
+    - docker run -d --name kea-dhcp6 kea-dhcp6
     # Check that something was logged.
     - sleep 5
     - docker logs kea-dhcp6 | grep "kea-dhcp6 entered RUNNING state"
@@ -53,7 +53,7 @@ ddns:
     # Build the image.
     - docker build -t kea-dhcp-ddns .
     # Run the dhcp4 container
-    - docker run -p 8000:8000 -d --name kea-dhcp-ddns kea-dhcp-ddns
+    - docker run -d --name kea-dhcp-ddns kea-dhcp-ddns
     # Check that something was logged.
     - sleep 5
     - docker logs kea-dhcp-ddns | grep "kea-dhcp-ddns entered RUNNING state"
