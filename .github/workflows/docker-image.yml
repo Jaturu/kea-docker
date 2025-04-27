@@ -1,10 +1,5 @@
 name: Docker Image CI
 
-# on:
-  # push:
-  #   branches: [ "master" ]
-  # pull_request:
-  #   branches: [ "master" ]
 on: 
   workflow_dispatch:
     inputs:
@@ -31,6 +26,7 @@ jobs:
             runner: ubuntu-24.04-arm
         image:
           - kea-dhcp4
+          - kea-dhcp6
 
     permissions:
       contents: read
@@ -85,6 +81,5 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         annotations: ${{ steps.meta.outputs.annotations }}
         labels: ${{ steps.meta.outputs.labels }}
-        # outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=multi-arch image
         outputs: |
-          type=registry,name=${{ env.REGISTRY }}/${{ github.repository }}-${{ matrix.image }}:${{ github.event.inputs.version }},name-canonical=true
+          type=registry,name=${{ env.REGISTRY }}/${{ github.repository }}-${{ matrix.image }}
