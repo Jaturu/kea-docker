@@ -12,11 +12,7 @@ on:
         description: 'Set ISC KEA package version to install in the docker image. These are fetched from Cloudsmith during the image build. https://kb.isc.org/docs/isc-kea-packages'     
         required: true
         default: '2.7'
-      tag:
-        description: 'Checkout source from specified tag. If no tag is specified, checkout from branch.'
-        required: false
-        default: ''
- 
+
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
@@ -38,8 +34,6 @@ jobs:
     - name: Checkout repository
       id: checkout
       uses: actions/checkout@v4
-      with:
-        ref: $${{ github.event.inputs.tag }}
 
     - name: Log in to the Container registry
       id: login
