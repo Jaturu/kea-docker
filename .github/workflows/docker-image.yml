@@ -73,8 +73,8 @@ jobs:
       uses: docker/build-push-action@v6
       with:
         provenance: false
-        context: .
-        file: ./${{ matrix.image }}/Dockerfile
+        context: ./${{ matrix.image }}
+        # file: ./${{ matrix.image }}/Dockerfile
         platforms: ${{ matrix.platform }}
         build-args: |
           VERSION=${{ github.event.inputs.version }}
