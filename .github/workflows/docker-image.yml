@@ -11,7 +11,7 @@ on:
       version:
         description: 'Set ISC KEA package version to install in the docker image. These are fetched from Cloudsmith during the image build. https://kb.isc.org/docs/isc-kea-packages'     
         required: true
-        default: '2.7'
+        default: '2.7.7'
 
 env:
   REGISTRY: ghcr.io
@@ -21,7 +21,7 @@ jobs:
   build:
     strategy:
       matrix:
-        arch: [amd64 arm64]
+        arch: [x86_64 arm64]
     runs-on: ubuntu-latest
 
     permissions:
