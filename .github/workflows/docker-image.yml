@@ -1,10 +1,18 @@
 name: Docker Image CI
 
-on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+# on:
+  # push:
+  #   branches: [ "master" ]
+  # pull_request:
+  #   branches: [ "master" ]
+on: 
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Set ISC KEA package version to build/install'     
+        required: true
+        default: '2.7'
+ 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
@@ -13,7 +21,7 @@ jobs:
   build:
     strategy:
       matrix:
-        arch: [x86_64, arm64]
+        arch: [arm64]
     runs-on: ubuntu-latest
 
     permissions:
@@ -43,7 +51,7 @@ jobs:
     
     # - name: Build the Docker image
     #   working-directory: ./kea-dhcp4
-    #   run: docker build . --file Dockerfile --tag ${{ IMAGE_NAME }}:$(date +%s)
+    #   run: docker build . --file Dockerfile --tag ${{ IMAGE_NAME }}:${{ github.event.inputs.version }}-$(date +%s)
 
     - name: Build and push Docker image
       id: push
@@ -51,6 +59,8 @@ jobs:
       with:
         file: ./kea-dhcp4/Dockerfile
         context: ./kea-dhcp4
+        build-args: |
+          VERSION=${{ github.event.inputs.version }}
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
