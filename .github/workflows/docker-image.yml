@@ -55,7 +55,7 @@ jobs:
       id: meta
       uses: docker/metadata-action@v5.7.0
       with:
-        images: ${{ env.REGISTRY }}/${{ github.repository }}-${{ matrix.image }}
+        images: ${{ env.REGISTRY }}/${{ github.repository }}/${{ matrix.image }}
       env:
         DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest
         # generate Docker tags based on the following events/attributes
@@ -73,7 +73,7 @@ jobs:
       uses: docker/build-push-action@v6
       with:
         provenance: false
-        context: ./${{ matrix.image }}
+        context: .
         file: ./${{ matrix.image }}/Dockerfile
         platforms: ${{ matrix.platform }}
         build-args: |
@@ -82,4 +82,4 @@ jobs:
         annotations: ${{ steps.meta.outputs.annotations }}
         labels: ${{ steps.meta.outputs.labels }}
         outputs: |
-          type=registry,name=${{ env.REGISTRY }}/${{ github.repository }}-${{ matrix.image }}
+          type=registry,name=${{ env.REGISTRY }}/${{ github.repository }}/${{ matrix.image }}
