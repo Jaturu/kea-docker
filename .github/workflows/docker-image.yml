@@ -72,14 +72,13 @@ jobs:
           type=semver,pattern={{major}}
           type=sha
     
-    - name: Build and push Docker image
+    - name: Build and push docker image ${{ matrix.image }} ${{ matrix.platform }}
       id: push
       uses: docker/build-push-action@v6
       with:
         provenance: false
         context: ./${{ matrix.image }}
         file: ./${{ matrix.image }}/Dockerfile
-        target: ${{ matrix.image }}
         platforms: ${{ matrix.platform }}
         build-args: |
           VERSION=${{ github.event.inputs.version }}
