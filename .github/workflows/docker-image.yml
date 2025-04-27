@@ -48,8 +48,6 @@ jobs:
       uses: docker/metadata-action@v5.7.0
       with:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-        tag-custom: |
-          {{raw}}
     
     # - name: Build the Docker image
     #   working-directory: ./kea-dhcp4
@@ -66,7 +64,7 @@ jobs:
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
-        annotations: |
-          image.architecture=${{ matrix.arch }}
+        # annotations: |
+        #   image.architecture=${{ matrix.arch }}
         platforms: ${{ matrix.platforms }}
         outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=multi-arch image
