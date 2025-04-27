@@ -21,7 +21,7 @@ jobs:
   build:
     strategy:
       matrix:
-        arch: [arm64]
+        arch: [amd64 arm64]
     runs-on: ubuntu-latest
 
     permissions:
@@ -68,3 +68,5 @@ jobs:
         labels: ${{ steps.meta.outputs.labels }}
         annotations: |
           image.architecture=${{ matrix.arch }}
+        platforms: ${{ matrix.platforms }}
+        outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=multi-arch image
