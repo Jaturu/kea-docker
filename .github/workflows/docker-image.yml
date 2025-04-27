@@ -15,7 +15,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  # IMAGE_NAME: ${{ github.repository }}
   BUILDX_NO_DEFAULT_ATTESTATIONS: 1
   
 jobs:
@@ -29,6 +29,8 @@ jobs:
             runner: ubuntu-latest
           - platform: linux/arm64
             runner: ubuntu-24.04-arm
+        image:
+          - kea-dhcp4
 
     permissions:
       contents: read
@@ -57,7 +59,7 @@ jobs:
       id: meta
       uses: docker/metadata-action@v5.7.0
       with:
-        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        images: ${{ env.REGISTRY }}/${{ github.repository }}-${{ matrix.image }}
       env:
         DOCKER_METADATA_ANNOTATIONS_LEVELS: manifest
         # generate Docker tags based on the following events/attributes
@@ -74,13 +76,16 @@ jobs:
       id: push
       uses: docker/build-push-action@v6
       with:
-        file: ./kea-dhcp4/Dockerfile
-        context: ./kea-dhcp4
+        provenance: false
+        context: ./${{ matrix.image }}
+        file: ./${{ matrix.image }}/Dockerfile
+        target: ${{ matrix.image }}
+        platforms: ${{ matrix.platform }}
         build-args: |
           VERSION=${{ github.event.inputs.version }}
-        push: true
         tags: ${{ steps.meta.outputs.tags }}
         annotations: ${{ steps.meta.outputs.annotations }}
         labels: ${{ steps.meta.outputs.labels }}
-        platforms: ${{ matrix.platform }}
         # outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=multi-arch image
+        outputs: |
+          type=registry,name=${{ env.REGISTRY }}/${{ github.repository }}-${{ matrix.image }},name-canonical=true
