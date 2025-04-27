@@ -16,7 +16,8 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-
+  BUILDX_NO_DEFAULT_ATTESTATIONS: 1
+  
 jobs:
   build:
     runs-on: ${{ matrix.runner }}
@@ -82,4 +83,4 @@ jobs:
         annotations: ${{ steps.meta.outputs.annotations }}
         labels: ${{ steps.meta.outputs.labels }}
         platforms: ${{ matrix.platform }}
-        # outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=multi-arch image
+        outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=multi-arch image
