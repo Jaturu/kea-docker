@@ -21,7 +21,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, ubuntu-24.04-arm]
+        os: [ubuntu-24.04-arm]
         arch: [x86_64, arm64]
     runs-on: ${{ matrix.os }}
 
@@ -65,7 +65,7 @@ jobs:
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
-        # annotations: |
-        #   image.architecture=${{ matrix.arch }}
+        annotations: |
+          image.architecture=${{ matrix.arch }}
         platforms: ${{ matrix.platforms }}
         outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=multi-arch image
