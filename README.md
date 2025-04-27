@@ -1,4 +1,11 @@
 # Docker Files for Building Kea Containers
+THIS IS A MIRROR FROM THE OFFICIAL GITLAB KEA-DOCKER REPOSITORY.
+https://gitlab.isc.org/isc-projects/kea-docker
+
+This builds docker images for amd64/arm64 at the latest version which is 2.7.7. These are not currently
+hosted on Cloudsmith. I added Github actions and a container registry. Everything else is as it was on
+GitLab.
+
 
 This repository contains Docker files used to build official Kea images.
 You can use them to build images locally with desired modifications.
