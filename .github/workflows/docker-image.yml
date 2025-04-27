@@ -9,9 +9,13 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Set ISC KEA package version to build/install'     
+        description: 'Set ISC KEA package version to install in the docker image. These are fetched from Cloudsmith during the image build. https://kb.isc.org/docs/isc-kea-packages'     
         required: true
         default: '2.7'
+      tag:
+        description: 'Checkout source from specified tag. If no tag is specified, checkout from branch.'
+        required: false
+        default: ''
  
 env:
   REGISTRY: ghcr.io
@@ -34,6 +38,8 @@ jobs:
     - name: Checkout repository
       id: checkout
       uses: actions/checkout@v4
+      with:
+        ref: $${{ github.event.inputs.tag }}
 
     - name: Log in to the Container registry
       id: login
@@ -48,6 +54,8 @@ jobs:
       uses: docker/metadata-action@v5.7.0
       with:
         images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        tag-custom: |
+          {{raw}}
     
     # - name: Build the Docker image
     #   working-directory: ./kea-dhcp4
