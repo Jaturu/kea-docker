@@ -88,4 +88,4 @@ jobs:
         labels: ${{ steps.meta.outputs.labels }}
         # outputs: type=image,name=target,annotation-index.org.opencontainers.image.description=multi-arch image
         outputs: |
-          type=registry,name=${{ env.REGISTRY }}/${{ github.repository }}-${{ matrix.image }},name-canonical=true
+          type=registry,name=${{ env.REGISTRY }}/${{ github.repository }}-${{ matrix.image }}:${{ github.event.inputs.version }},name-canonical=true
