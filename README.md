@@ -2,7 +2,7 @@
 THIS IS A MIRROR FROM THE OFFICIAL GITLAB KEA-DOCKER REPOSITORY.
 https://gitlab.isc.org/isc-projects/kea-docker
 
-This builds docker images for amd64/arm64 at the latest version which is 2.7.7. These are not currently
+This builds docker images for amd64/arm64 at the latest version which is 2.7.8. These are not currently
 hosted on Cloudsmith. I added Github actions and a container registry. Everything else is as it was on
 GitLab.
 
@@ -11,7 +11,7 @@ This repository contains Docker files used to build official Kea images.
 You can use them to build images locally with desired modifications.
 Also, the Kea-Compose script allows for rapid deployment of Kea with IPv4, IPv6, and a PostgreSQL database.
 
-Those Docker files and images are based on Alpine 3.17.
+Those Docker files and images are based on Alpine 3.21.
 
 Table of contents:
 1. [Using Official Kea Images on Cloudsmith](#using-official-kea-images-on-cloudsmith)
